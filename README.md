@@ -15,6 +15,6 @@ Category (training : validation)
 
 ### Steps Taken
 These are the steps taken in my learning process to create object classification. The final analysis for each step will be kept in the analysis folder.
-1. Simple Model [analysis/1.md] (analysis/1.md)
-2. Complex Model for the problem [analysis/2.md] (analysis/2.md)
-3. Transfer learning using ResNet [analysis/3.md] (analysis/3.md)
+1. Simple Model [analysis/1.md] (./analysis/1.md)
+2. Complex Model for the problem [analysis/2.md] (./analysis/2.md)
+3. Transfer learning using ResNet [analysis/3.md] (./analysis/3.md)
