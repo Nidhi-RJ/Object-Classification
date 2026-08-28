@@ -1,19 +1,25 @@
 import cv2
-import torch
+import torch, torch.nn as nn
 from torchvision import transforms
 from PIL import Image
-from model import ObjectClassification
+from model_history.model_1 import ObjectClassification
+from torchvision.models import resnet18, ResNet18_Weights
 
 classes = ['cutlery', 'hair_brushes', 'keys', 'medications', 'specs']
 # {'cutlery': 0, 'hair_brushes': 1, 'keys': 2, 'medications': 3, 'specs': 4}
-model = ObjectClassification()
+model = resnet18(weights=None)
+
+model.fc = nn.Linear(
+    model.fc.in_features, 5
+)
+
 model.load_state_dict(torch.load("best_model.pth"))
 model.eval()
 
-transform = transforms.Compose([
-    transforms.Resize((128, 128)),
-    transforms.ToTensor()
-])
+# Need to change the tranformation of image each time depending on the model being used and how it was preprocessed
+weights = ResNet18_Weights.DEFAULT
+
+transform = weights.transforms()
 
 cap = cv2.VideoCapture(0)
 if not cap.isOpened():
@@ -48,9 +54,9 @@ while True:
         prediction = prediction.item()         
 
     #display prediction
-    if confidence > 70:
+    if confidence > 60:
         cv2.putText(frame,
-                    f"Class: {classes[prediction]} \n Confidence Score:{confidence}",
+                    f"Class: {classes[prediction]} | Confidence Score:{confidence}",
                     (20,40),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.5,
@@ -58,7 +64,7 @@ while True:
                     2)
     else:
         cv2.putText(frame,
-                    f"Class: Unknown Object \n possibility: {classes[prediction]} ({confidence}%)",
+                    f"Class: Unknown Object | possibility: {classes[prediction]} ({confidence}%)",
                     (20,40),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.5,
